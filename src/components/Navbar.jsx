@@ -4,16 +4,44 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Image from 'next/image';
 import NavLink from './NavLink';
-const Navbar = () => {
+import { motion } from 'framer-motion';
 
+const Navbar = () => {
     const links = [
         { name: 'Home', path: '/' },
         { name: 'About', path: '/about' },
         { name: 'Portfolio', path: '/portfolio' },
         { name: 'Contact', path: '/contact' }
-    ]
+    ];
 
     const [toggleMenu, setToggleMenu] = useState(false);
+
+    const topVariants = {
+        closed: { rotate: 0, backgroundColor: "rgb(0, 0, 0)" },
+        open: { rotate: 45, backgroundColor: "rgb(255, 255, 255)" }
+    };
+
+    const centerVariants = {
+        closed: { opacity: 1 },
+        open: { opacity: 0 }
+    };
+
+    const bottomVariants = {
+        closed: { rotate: 0, backgroundColor: "rgb(0, 0, 0)" },
+        open: { rotate: -45, backgroundColor: "rgb(255, 255, 255)" }
+    };
+
+    const listVariants = { 
+        open: { x: 0 
+            , transition: { staggerChildren: 0.1, delayChildren: 0.2 }
+        },
+        closed: { x: "100vw" }
+    };
+
+    const itemVariants = {
+        closed: { opacity: 0, x: 50 },
+        open: { opacity: 1, x: 0 }
+    };
 
     return (
         <div className="h-full flex items-center justify-between px-4 sm:px-8 md:px-12 lg:px-20 xl:px-48">
@@ -45,27 +73,26 @@ const Navbar = () => {
                 </Link>
             </div>
 
-            
             {/* Responsive Menu */}
             <div className='md:hidden'>
-                <button  onClick={() => setToggleMenu(!toggleMenu)} className='w-10 h-6 flex flex-col justify-between z-50 relative'>
-                    <div className={`w-8  h-1 ${toggleMenu ? "bg-white" : "bg-black"} rounded`}></div>
-                    <div className={`w-8  h-1 ${toggleMenu ? "bg-white" : "bg-black"} rounded`}></div>
-                    <div className={`w-8  h-1 ${toggleMenu ? "bg-white" : "bg-black"} rounded`}></div>
+                <button onClick={() => setToggleMenu(!toggleMenu)} className='w-10 h-6 flex flex-col justify-between z-50 relative'>
+                    <motion.div variants={topVariants} animate={toggleMenu ? "open" : "closed"} className={`w-8 h-1 ${toggleMenu ? "bg-white" : "bg-black"} rounded origin-left`}></motion.div>
+                    <motion.div variants={centerVariants} animate={toggleMenu ? "open" : "closed"} className={`w-8 h-1 ${toggleMenu ? "bg-white" : "bg-black"} rounded`}></motion.div>
+                    <motion.div variants={bottomVariants} animate={toggleMenu ? "open" : "closed"} className={`w-8 h-1 ${toggleMenu ? "bg-white" : "bg-black"} rounded origin-left`}></motion.div>
                 </button>
             </div>
 
             {toggleMenu && (
-                <div className='absolute top-0 left-0 w-screen h-screen bg-black text-white flex flex-col items-center justify-center gap-8 text-4xl'>
+                <motion.div variants={listVariants} animate={toggleMenu ? "open" : "closed"} initial="closed" className='absolute top-0 left-0 w-screen h-screen bg-black text-white flex flex-col items-center justify-center gap-8 text-4xl'>
                 {links.map((link, index) => (
-                    <Link key={index} href={link.path}>
-                        {link.name}
-                    </Link>
+                    <motion.div key={index} variants={itemVariants}>
+                        <Link href={link.path}>
+                            {link.name}
+                        </Link>
+                    </motion.div>
                 ))}
-            </div>
+            </motion.div>
             )}
-
-
         </div>
     );
 }
