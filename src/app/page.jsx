@@ -8,7 +8,7 @@ const Homepage = () => {
         <Image
           src="/hero.png"
           alt=""
-          className="lg:object-contain lg:p-20 -z-10"
+          className="object-contain lg:p-20"
           fill
         />
       </div>
